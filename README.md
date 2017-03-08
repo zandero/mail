@@ -1,2 +1,3 @@
 # mail
-Mail utilities
+Mail building to compose `MailMessage` object with correct encoding, headers ...
+

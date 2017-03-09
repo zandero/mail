@@ -76,6 +76,12 @@ public class MailMessage implements Serializable {
 	 */
 	private Map<String, Long> emailSendAt;
 
+	/**
+	 * Build mail message
+	 * @param session mail session
+	 * @return build mime message
+	 * @throws IllegalArgumentException in case massage could not be build up, wraps MessagingException and UnsupportedEncodingException
+	 */
 	public MimeMessage getMessage(Session session) {
 
 		Assert.notNull(emails, "No email address given!");
@@ -185,13 +191,13 @@ public class MailMessage implements Serializable {
 			}
 			catch (Exception e) {
 				log.error("Failed to add attachment to mail message: ", e);
-				throw new IllegalArgumentException(e.getMessage());
+				throw new IllegalArgumentException(e.getMessage(), e);
 			}
 
 		}
 		catch (MessagingException | UnsupportedEncodingException e) {
 			log.error("Mail massage build failed!", e);
-			throw new IllegalArgumentException(e.getMessage());
+			throw new IllegalArgumentException(e.getMessage(), e);
 		}
 
 		return msg;

@@ -9,8 +9,8 @@
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>Zandero Mail Utilities</name>
-    <description>Zandero mail utilities</description>
+    <name>Zandero</name>
+    <description>mail and template utilities</description>
     <url>http://www.zandero.com</url>
     <inceptionYear>2017</inceptionYear>
 

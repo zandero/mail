@@ -46,7 +46,9 @@
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
 
-        <version.zandero.utils>[1.0,)</version.zandero.utils>
+        <version.zandero.utils>[1.1,)</version.zandero.utils>
+        <version.zandero.settings>[1.0,)</version.zandero.settings>
+
         <version.mustache>[0.9.4,)</version.mustache>
         <version.sendgrid.java>3.1.0</version.sendgrid.java>
 
@@ -67,6 +69,12 @@
             <groupId>com.zandero</groupId>
             <artifactId>utils</artifactId>
             <version>${version.zandero.utils}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.zandero</groupId>
+            <artifactId>settings</artifactId>
+            <version>${version.zandero.settings}</version>
         </dependency>
 
         <dependency>

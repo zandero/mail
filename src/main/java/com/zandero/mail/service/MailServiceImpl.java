@@ -12,6 +12,9 @@ import javax.mail.Transport;
 import java.util.Enumeration;
 import java.util.Properties;
 
+/**
+ * Java general purpose Mail service
+ */
 public class MailServiceImpl implements MailService {
 
 	private static final Logger log = LoggerFactory.getLogger(MailServiceImpl.class);
@@ -26,9 +29,9 @@ public class MailServiceImpl implements MailService {
 	@Override
 	public MailSendResult send(MailMessage builder) {
 
-		Properties props = getProperties(mailSettings);
-
+		final Properties props = getProperties(settings);
 		Session session = Session.getDefaultInstance(props, null);
+
 		try {
 
 			// build mime message
@@ -62,7 +65,15 @@ public class MailServiceImpl implements MailService {
 
 	}
 
-	private Properties getProperties(MailSettings settings) {
+	/**
+	 * Returns default session properties.
+	 * To be overridden or extended in case additional properties are needed
+	 *
+	 * Fills up properties to be used in Session
+	 * @param settings to fill up properties
+	 * @return default properties
+	 */
+	public Properties getProperties(MailSettings settings) {
 
 		Properties props = new Properties();
 
@@ -71,13 +82,11 @@ public class MailServiceImpl implements MailService {
 			props.put("mail.smtp.port", settings.getSmtpUrl());
 		}
 		catch (NumberFormatException e) {
-			log.error("Invalid or missing AWS_SMTP_PORT");
+			log.error("Invalid or missing SMPT_PORT");
 			throw new IllegalArgumentException("SMTP_PORT - invalid or missing!");
 		}
 		props.put("mail.smtp.auth", "true");
 
-		// props.put("mail.smtp.starttls.enable", "true");
-		// log.info("Properties: " + JsonUtils.toJson(props));
 		return props;
 	}
 }

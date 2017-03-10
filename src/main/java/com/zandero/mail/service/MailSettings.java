@@ -1,8 +1,8 @@
 package com.zandero.mail.service;
 
-import com.codescore.common.settings.Settings;
-import com.codescore.utils.Assert;
-import com.codescore.utils.StringUtils;
+import com.zandero.settings.Settings;
+import com.zandero.utils.Assert;
+import com.zandero.utils.StringUtils;
 
 public class MailSettings extends Settings {
 
@@ -43,8 +43,12 @@ public class MailSettings extends Settings {
 	 * - username
 	 * - password
 	 * - default from mail
+	 *
+	 * For instance: smtp://some.smtp.url:123,myUser,myPassword,default@from.email
 	 * OR
-	 * - api key (if it contains ','
+	 * - api key (should not contain ",")!
+	 *
+	 * For instance: someRandomGeneratedKey
 	 *
 	 * @param smtp list of setting as single string
 	 */
@@ -142,7 +146,7 @@ public class MailSettings extends Settings {
 	@Override
 	public String toString() {
 
-		return "URL: " + getSmtpUrl() + ", Username: " + getSmtpUsername() + ", Password: " + getSmtpPassword();
+		return "URL: " + getSmtpUrl() + ", Username: " + getSmtpUsername() + ", Password: " + StringUtils.trimTextDown(getSmtpPassword(), 5, "***");
 	}
 
 	public static class Builder extends Settings.Builder {

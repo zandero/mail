@@ -1,5 +1,5 @@
 # mail
-Utility to build a mail MimeMessage with Mustache templates support 
+Utility to build a mail MimeMessage 
 
 ## Setup
 ```xml

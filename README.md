@@ -21,5 +21,3 @@ message.to("mail@email.com")
 
 MimeMessage mime = message.getMessage(session);
 ```
-
-## Templates

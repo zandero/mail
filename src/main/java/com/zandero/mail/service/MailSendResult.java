@@ -1,7 +1,7 @@
 package com.zandero.mail.service;
 
 /**
- *
+ * Mail message send status indicator
  */
 public class MailSendResult {
 
@@ -9,23 +9,40 @@ public class MailSendResult {
 
 	private final String messageId;
 
-	public MailSendResult() {
-
-		status = 200;
-		messageId = null;
-	}
-
+	/**
+	 * Set status and message id manually
+	 * @param statusCode http status code
+	 * @param id message id
+	 */
 	public MailSendResult(int statusCode, String id) {
 
 		status = statusCode;
 		messageId = id;
 	}
 
+	/**
+	 * Mail was send out successfully
+	 * @return mail success
+	 */
 	public static MailSendResult ok() {
 
-		return new MailSendResult();
+		return new MailSendResult(200, null);
 	}
 
+	/**
+	 * Mail was send out successfully
+	 * @param messageId
+	 * @return mail success
+	 */
+	public static MailSendResult ok(String messageId) {
+
+		return new MailSendResult(200, messageId);
+	}
+
+	/**
+	 * Mail was not send out
+	 * @return mail send failure
+	 */
 	public static MailSendResult fail() {
 
 		return new MailSendResult(400, null); // bad request
@@ -51,6 +68,9 @@ public class MailSendResult {
 		return messageId;
 	}
 
+	/**
+	 * @return true if mail was send out successfully, false otherwise
+	 */
 	public boolean isSuccessful() {
 
 		return status >= 200 && status < 300;
@@ -59,6 +79,6 @@ public class MailSendResult {
 	@Override
 	public String toString() {
 
-		return status + " [" + messageId + "]";
+		return status + " [" + (messageId == null ? "> no message id <" : messageId) + "]";
 	}
 }

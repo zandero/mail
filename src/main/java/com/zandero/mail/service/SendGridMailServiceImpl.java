@@ -56,8 +56,7 @@ public class SendGridMailServiceImpl implements MailService {
 
 			log.debug("SendGrid returned: " + response.statusCode + ": " + response.body + ", header: " + StringUtils.join(response.headers, ", "));
 
-			String messageId = response.headers.get("X-Message-Id");
-
+			String messageId = response.headers != null ? response.headers.get("X-Message-Id") : null;
 			return new MailSendResult(response.statusCode, messageId);
 		}
 		catch (IOException e) {

@@ -6,7 +6,7 @@ Utility to build a mail MimeMessage
 <dependency>      
      <groupId>com.zandero</groupId>      
      <artifactId>mail</artifactId>      
-     <version>1.0</version>      
+     <version>1.2</version>      
 </dependency>
 ```
 

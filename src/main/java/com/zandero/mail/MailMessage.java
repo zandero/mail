@@ -1,8 +1,9 @@
 package com.zandero.mail;
 
 import com.zandero.utils.Assert;
-import com.zandero.utils.EncodeUtils;
 import com.zandero.utils.StringUtils;
+import com.zandero.utils.extra.EncodeUtils;
+import com.zandero.utils.extra.ValidatingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -522,7 +523,7 @@ public class MailMessage implements Serializable {
 
 	public MailMessage setSendAt(String email, long timeStamp) {
 
-		if (StringUtils.isEmail(email)) {
+		if (ValidatingUtils.isEmail(email)) {
 			if (emailSendAt == null) {
 				emailSendAt = new HashMap<>();
 			}
@@ -643,7 +644,7 @@ public class MailMessage implements Serializable {
 	 */
 	public Long getSendAt(String toEmail) {
 
-		if (emailSendAt == null || !StringUtils.isEmail(toEmail)) {
+		if (emailSendAt == null || !ValidatingUtils.isEmail(toEmail)) {
 			return null;
 		}
 
@@ -653,6 +654,6 @@ public class MailMessage implements Serializable {
 	private void checkEmailAddress(String email, String type) {
 
 		Assert.notNullOrEmptyTrimmed(email, "Missing " + (type == null ? "" : type.toLowerCase()) + " email address!");
-		Assert.isTrue(StringUtils.isEmail(email), "Invalid from email address!");
+		Assert.isTrue(ValidatingUtils.isEmail(email), "Invalid from email address!");
 	}
 }

@@ -1,7 +1,7 @@
 package com.zandero.mail.service;
 
 import com.zandero.mail.MailMessage;
-import com.zandero.utils.JsonUtils;
+import com.zandero.utils.extra.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

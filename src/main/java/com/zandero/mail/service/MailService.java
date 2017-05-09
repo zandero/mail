@@ -4,6 +4,7 @@ import com.zandero.mail.MailAttachment;
 import com.zandero.mail.MailMessage;
 import com.zandero.utils.Assert;
 import com.zandero.utils.StringUtils;
+import com.zandero.utils.extra.ValidatingUtils;
 
 import java.util.List;
 
@@ -47,8 +48,8 @@ public interface MailService {
 	default MailSendResult send(String fromName, String fromEmail, String toName, String toEmail, String subject, String msgText, String msgHTML,
 	                            List<MailAttachment> attachments) {
 
-		Assert.isTrue(StringUtils.isEmail(fromEmail),  "Invalid email address given: '" + fromEmail + "'");
-		Assert.isTrue(StringUtils.isEmail(toEmail), "Invalid email address given: '" + toEmail + "'");
+		Assert.isTrue(ValidatingUtils.isEmail(fromEmail),  "Invalid email address given: '" + fromEmail + "'");
+		Assert.isTrue(ValidatingUtils.isEmail(toEmail), "Invalid email address given: '" + toEmail + "'");
 
 		MailMessage mail = new MailMessage()
 			.from(fromEmail, fromName)
@@ -88,7 +89,7 @@ public interface MailService {
 	 */
 	default MailSendResult send(String fromEmail, String fromName, String toEmail, String toName, String subject, String htmlContent) {
 
-		Assert.isTrue(StringUtils.isEmail(toEmail), "Invalid email address given: '" + toEmail + "'");
+		Assert.isTrue(ValidatingUtils.isEmail(toEmail), "Invalid email address given: '" + toEmail + "'");
 
 		MailMessage mail = new MailMessage()
 			.to(toEmail)

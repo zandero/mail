@@ -23,10 +23,10 @@ public class MailSettings extends Settings {
 	private static final String SERVICE_API_KEY = "api_key";
 
 
-	public MailSettings() {
+	public MailSettings(MailSettings.Builder builder) {
 
 		// add default
-		MailSettings.Builder builder = new MailSettings.Builder();
+		Assert.notNull(builder, "Missing mail settings builder!");
 		this.putAll(builder.build());
 	}
 
@@ -151,20 +151,11 @@ public class MailSettings extends Settings {
 
 	public static class Builder extends Settings.Builder {
 
-		public Builder() {
-			// default settings
-			add(SMTP_URL, "smtp://localhost");
-			add(SMTP_PORT, 25);
-
-			add(SMTP_USERNAME, "username");
-			add(SMTP_PASSWORD, "password");
-
-			add(SMTP_DEFAULT_FROM_NAME, "DevScore");
-			add(SMTP_DEFAULT_FROM_EMAIL, "info@devscore.co");
-		}
+		public Builder() {}
 
 		public Builder(Settings settings) {
 
+			Assert.notNull(settings, "Missing settings!");
 			// add (should is present by default)
 			smtpUrl(settings.getString(MailSettings.SMTP_URL));
 			credentials(settings.getString(MailSettings.SMTP_USERNAME), settings.getString(MailSettings.SMTP_PASSWORD));

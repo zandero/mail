@@ -1,7 +1,6 @@
 package com.zandero.mail.service;
 
 import com.zandero.mail.MailMessage;
-import com.zandero.utils.extra.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +48,7 @@ public class MailServiceImpl implements MailService {
 			log.info("Connecting to SMTP server: " + settings);
 
 			transport.connect(settings.getSmtpUrl(), settings.getSmtpPort(), settings.getSmtpUsername(), settings.getSmtpPassword());
-			log.info("Sending e-mail to: " + JsonUtils.toJson(msg.getAllRecipients()));
+//			log.info("Sending e-mail to: " + JsonUtils.toJson(msg.getAllRecipients()));
 
 			transport.sendMessage(msg, msg.getAllRecipients());
 			log.info("Closing transport...");

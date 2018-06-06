@@ -58,7 +58,7 @@
         <version.java.mail.api>[1.5.5,)</version.java.mail.api>
 
         <version.trajano>[2.1.0,)</version.trajano>
-        <version.junit>[4.12,)</version.junit>
+        <version.junit>[5.1,)</version.junit>
         <version.mockito-all>[1.10.19,)</version.mockito-all>
 
     </properties>
@@ -111,21 +111,6 @@
 
         <!--Testing stuff bellow-->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${version.junit}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.trajano.commons</groupId>
-            <artifactId>commons-testing</artifactId>
-            <version>${version.trajano}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Mockito for mocking stuff-->
-        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>${version.mockito-all}</version>
@@ -136,6 +121,27 @@
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
             <version>${version.java.mail.api}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${version.mockito.all}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.zandero</groupId>
+            <artifactId>utils.junit</artifactId>
+            <version>${version.zandero.utils.junit}</version>
             <scope>test</scope>
         </dependency>
 

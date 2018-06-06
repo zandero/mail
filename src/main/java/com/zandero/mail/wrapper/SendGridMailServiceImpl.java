@@ -1,7 +1,10 @@
-package com.zandero.mail.service;
+package com.zandero.mail.wrapper;
 
 import com.sendgrid.*;
 import com.zandero.mail.MailMessage;
+import com.zandero.mail.service.MailSendResult;
+import com.zandero.mail.service.MailService;
+import com.zandero.mail.service.MailSettings;
 import com.zandero.utils.Assert;
 import com.zandero.utils.StringUtils;
 import org.slf4j.Logger;
@@ -19,7 +22,7 @@ public class SendGridMailServiceImpl implements MailService {
 
 	private final SendGrid sendgrid;
 
-	private final MailSettings mailSettings;
+	private final com.zandero.mail.service.MailSettings mailSettings;
 
 	public SendGridMailServiceImpl(MailSettings settings) {
 

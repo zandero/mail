@@ -2,7 +2,6 @@ package com.zandero.mail;
 
 import com.zandero.utils.Assert;
 import com.zandero.utils.StringUtils;
-import com.zandero.utils.extra.EncodeUtils;
 import com.zandero.utils.extra.ValidatingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +26,7 @@ public class MailMessage implements Serializable {
 	private static final Logger log = LoggerFactory.getLogger(MailMessage.class);
 
 	private static final long serialVersionUID = 355919787686445837L;
+	private static final String UTF_8 = "UTF-8";
 
 	Map<Message.RecipientType, Map<String, String>> emails;
 
@@ -88,7 +88,7 @@ public class MailMessage implements Serializable {
 		Assert.notNull(emails, "No email address given!");
 
 		Map<String, String> recipients = emails.get(Message.RecipientType.TO);
-		Assert.isTrue(recipients != null && recipients.size() > 0, "Missing TO email address(es)!");
+		Assert.isTrue(recipients != null && recipients.size() > 0, "Missing to email address(es)!");
 
 		boolean found = false;
 		for (String email : recipients.keySet()) {
@@ -98,13 +98,13 @@ public class MailMessage implements Serializable {
 			}
 		}
 
-		Assert.isTrue(found, "All TO email address(es) are excluded!");
+		Assert.isTrue(found, "All to email address(es) are excluded!");
 
 		if (StringUtils.isNullOrEmptyTrimmed(fromName)) {
 			fromName = fromEmail;
 		}
 
-		Assert.notNullOrEmptyTrimmed(fromEmail, "Missing FROM email address!");
+		Assert.notNullOrEmptyTrimmed(fromEmail, "Missing from email address!");
 		Assert.notNullOrEmptyTrimmed(subject, "Missing email subject!");
 
 		Assert.isTrue(!StringUtils.isNullOrEmptyTrimmed(content) || !StringUtils.isNullOrEmptyTrimmed(htmlContent), "Missing email content!");
@@ -119,7 +119,7 @@ public class MailMessage implements Serializable {
 
 		// FROM:
 		try {
-			msg.setFrom(new InternetAddress(fromEmail, fromName, EncodeUtils.UTF_8));
+			msg.setFrom(new InternetAddress(fromEmail, fromName, UTF_8));
 
 			// TO:
 			addRecipients(Message.RecipientType.TO, msg);
@@ -128,8 +128,8 @@ public class MailMessage implements Serializable {
 			// BCC:
 			addRecipients(Message.RecipientType.BCC, msg);
 
-			//msg.setSubject(subject, EncodeUtils.UTF_8);
-			msg.setSubject(MimeUtility.encodeText(subject, EncodeUtils.UTF_8, "Q"));
+			//msg.setSubject(subject, UTF_8);
+			msg.setSubject(MimeUtility.encodeText(subject, UTF_8, "Q"));
 
 			// add headers
 			if (headers != null && headers.size() > 0) {
@@ -146,10 +146,10 @@ public class MailMessage implements Serializable {
 
 					if (StringUtils.isNullOrEmptyTrimmed(content)) {
 						msg.addHeader("Content-Type", "text/html");
-						msg.setContent(htmlContent, "text/html; charset=" + EncodeUtils.UTF_8);
+						msg.setContent(htmlContent, "text/html; charset=" + UTF_8);
 					}
 					else {
-						msg.setContent(content, "text/plain; charset=" + EncodeUtils.UTF_8);
+						msg.setContent(content, "text/plain; charset=" + UTF_8);
 					}
 				}
 				// Compose multipart message
@@ -159,13 +159,13 @@ public class MailMessage implements Serializable {
 
 					if (!StringUtils.isNullOrEmptyTrimmed(content)) {
 						MimeBodyPart contentPart = new MimeBodyPart();
-						contentPart.setContent(content, "text/plain; charset=" + EncodeUtils.UTF_8);
+						contentPart.setContent(content, "text/plain; charset=" + UTF_8);
 						multipart.addBodyPart(contentPart);
 					}
 
 					if (!StringUtils.isNullOrEmptyTrimmed(htmlContent)) {
 						MimeBodyPart htmlPart = new MimeBodyPart();
-						htmlPart.setContent(htmlContent, "text/html; charset=" + EncodeUtils.UTF_8);
+						htmlPart.setContent(htmlContent, "text/html; charset=" + UTF_8);
 						multipart.addBodyPart(htmlPart);
 					}
 
@@ -218,7 +218,7 @@ public class MailMessage implements Serializable {
 				}
 
 				if (!excluded(email)) {
-					msg.addRecipient(type, new InternetAddress(email, name, EncodeUtils.UTF_8));
+					msg.addRecipient(type, new InternetAddress(email, name, UTF_8));
 					log.info("Sending: " + type + ": " + email + " (" + name + ")");
 				}
 				else {
@@ -653,7 +653,8 @@ public class MailMessage implements Serializable {
 
 	private void checkEmailAddress(String email, String type) {
 
-		Assert.notNullOrEmptyTrimmed(email, "Missing " + (type == null ? "" : type.toLowerCase()) + " email address!");
-		Assert.isTrue(ValidatingUtils.isEmail(email), "Invalid from email address!");
+		String description = type == null ? "" : type.toLowerCase();
+		Assert.notNullOrEmptyTrimmed(email, "Missing " + description + " email address!");
+		Assert.isTrue(ValidatingUtils.isEmail(email), "Invalid " + description + " email address: '" + email + "'!");
 	}
 }

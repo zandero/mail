@@ -1,6 +1,6 @@
 package com.zandero.mail;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -13,12 +13,13 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class MailMessageTest {
 
 	@Test
-	public void to() {
+	void to() {
 
 		MailMessage message = new MailMessage();
 		message.to("mail@email.com");
@@ -37,7 +38,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void to_list() {
+	void to_list() {
 
 		List<String> emails = new ArrayList<>();
 
@@ -68,7 +69,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void to_emailName() {
+	void to_emailName() {
 
 		MailMessage message = new MailMessage();
 		message.to("mail@email.com", "name");
@@ -93,7 +94,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void to_map() {
+	void to_map() {
 
 		HashMap<String, String> emailsNames = new HashMap<>();
 
@@ -135,7 +136,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void to_lists() {
+	void to_lists() {
 
 		List<String> emails = new ArrayList<>();
 		List<String> names = new ArrayList<>();
@@ -177,154 +178,104 @@ public class MailMessageTest {
 		assertEquals(2, message.emails.get(Message.RecipientType.TO).size());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testInvalid_to_1() {
+	@Test
+	void testInvalid_to_1() {
 
 		MailMessage massage = new MailMessage();
-		try {
-			massage.to((String)null);
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing to email address!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> massage.to((String)null));
+		assertEquals("Missing to email address!", e.getMessage());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testInvalid_to_1_2() {
+	@Test
+	void testInvalid_to_1_2() {
 
 		MailMessage massage = new MailMessage();
 		String email = "  ";
-		try {
-			massage.to(email);
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing to email address!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> massage.to(email));
+		assertEquals("Missing to email address!", e.getMessage());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testInvalid_to_2() {
+	@Test
+	void testInvalid_to_2() {
 
 		MailMessage massage = new MailMessage();
-		try {
-			massage.to((String)null, null);
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing to email address!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> massage.to((String)null, null));
+		assertEquals("Missing to email address!", e.getMessage());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testInvalid_to_2_1() {
+	@Test
+	void testInvalid_to_2_1() {
 
 		MailMessage massage = new MailMessage();
 		String email = "  ";
-		try {
-			massage.to(email, null);
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing to email address!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> massage.to(email, null));
+		assertEquals("Missing to email address!", e.getMessage());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testInvalid_to_3() {
+	@Test
+	void testInvalid_to_3() {
 
 		MailMessage massage = new MailMessage();
 		List<String> emails = new ArrayList<>();
 		emails.add(null);
-		try {
-			massage.to(emails);
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing to email address!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> massage.to(emails));
+		assertEquals("Missing to email address!", e.getMessage());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testInvalid_to_3_1() {
+	@Test
+	void testInvalid_to_3_1() {
 
 		MailMessage massage = new MailMessage();
 		List<String> emails = new ArrayList<>();
 		emails.add("  ");
-		try {
-			massage.to(emails);
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing to email address!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> massage.to(emails));
+		assertEquals("Missing to email address!", e.getMessage());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testInvalid_to_4() {
+	@Test
+	void testInvalid_to_4() {
 
 		MailMessage massage = new MailMessage();
 		Map<String, String> emails = new HashMap<>();
 		emails.put(null, null);
-		try {
-			massage.to(emails);
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing to email address!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> massage.to(emails));
+		assertEquals("Missing to email address!", e.getMessage());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testInvalid_to_4_1() {
+	@Test
+	void testInvalid_to_4_1() {
 
 		MailMessage massage = new MailMessage();
 		Map<String, String> emails = new HashMap<>();
 		emails.put("  ", null);
-		try {
-			massage.to(emails);
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing to email address!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> massage.to(emails));
+		assertEquals("Missing to email address!", e.getMessage());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testInvalid_to_5() {
+	@Test
+	void testInvalid_to_5() {
 
 		MailMessage massage = new MailMessage();
 		List<String> emails = new ArrayList<>();
 		List<String> names = new ArrayList<>();
 		emails.add(null);
-		try {
-			massage.to(emails, names);
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing to email address!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> massage.to(emails, names));
+		assertEquals("Missing to email address!", e.getMessage());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testInvalid_to_5_1() {
+	@Test
+	void testInvalid_to_5_1() {
 
 		MailMessage massage = new MailMessage();
 		List<String> emails = new ArrayList<>();
 		List<String> names = new ArrayList<>();
 		emails.add("  ");
-		try {
-			massage.to(emails, names);
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing to email address!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> massage.to(emails, names));
+		assertEquals("Missing to email address!", e.getMessage());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testInvalid_to_5_2() {
+	@Test
+	void testInvalid_to_5_2() {
 
 		MailMessage massage = new MailMessage();
 		List<String> emails = new ArrayList<>();
@@ -333,18 +284,13 @@ public class MailMessageTest {
 		emails.add("email2");
 
 		names.add("name");
-		try {
-			massage.to(emails, names);
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Names and emails list must have same number of items!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> massage.to(emails, names));
+		assertEquals("Names and emails list must have same number of items!", e.getMessage());
 	}
 
 	// CC
 	@Test
-	public void cc() {
+	void cc() {
 
 		MailMessage message = new MailMessage();
 		message.cc("mail@email.com");
@@ -363,7 +309,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void cc_list() {
+	void cc_list() {
 
 		List<String> emails = new ArrayList<>();
 
@@ -394,7 +340,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void cc_emailName() {
+	void cc_emailName() {
 
 		MailMessage message = new MailMessage();
 		message.cc("mail@email.com", "name");
@@ -419,7 +365,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void cc_map() {
+	void cc_map() {
 
 		HashMap<String, String> emailsNames = new HashMap<>();
 
@@ -461,7 +407,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void cc_lists() {
+	void cc_lists() {
 
 		List<String> emails = new ArrayList<>();
 		List<String> names = new ArrayList<>();
@@ -505,7 +451,7 @@ public class MailMessageTest {
 
 	// BCC
 	@Test
-	public void bcc() {
+	void bcc() {
 
 		MailMessage message = new MailMessage();
 		message.bcc("mail@email.com");
@@ -524,7 +470,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void bcc_list() {
+	void bcc_list() {
 
 		List<String> emails = new ArrayList<>();
 
@@ -555,7 +501,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void bcc_emailName() {
+	void bcc_emailName() {
 
 		MailMessage message = new MailMessage();
 		message.bcc("mail@email.com", "name");
@@ -580,7 +526,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void bcc_map() {
+	void bcc_map() {
 
 		HashMap<String, String> emailsNames = new HashMap<>();
 
@@ -622,7 +568,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void bcc_lists() {
+	void bcc_lists() {
 
 		List<String> emails = new ArrayList<>();
 		List<String> names = new ArrayList<>();
@@ -665,7 +611,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void from() {
+	void from() {
 
 		MailMessage message = new MailMessage();
 		message.from(" a@a.com ");
@@ -684,47 +630,32 @@ public class MailMessageTest {
 		assertNull(message.getFromName());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testFrom_fail() {
+	@Test
+	void testFrom_fail() {
 
 		MailMessage message = new MailMessage();
-		try {
-			message.from("  ");
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing from email address!", e.getMessage());
-			throw e;
-		}
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testFrom_fail2() {
-
-		MailMessage message = new MailMessage();
-		try {
-			message.from("  ", "bla");
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing from email address!", e.getMessage());
-			throw e;
-		}
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testDefaultFrom_fail() {
-
-		MailMessage message = new MailMessage();
-		try {
-			message.defaultFrom("  ", "bla");
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing from email address!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> message.from("  "));
+		assertEquals("Missing from email address!", e.getMessage());
 	}
 
 	@Test
-	public void defaultFrom() {
+	void testFrom_fail2() {
+
+		MailMessage message = new MailMessage();
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> message.from("  ", "bla"));
+		assertEquals("Missing from email address!", e.getMessage());
+	}
+
+	@Test
+	void testDefaultFrom_fail() {
+
+		MailMessage message = new MailMessage();
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> message.defaultFrom("  ", "bla"));
+		assertEquals("Missing from email address!", e.getMessage());
+	}
+
+	@Test
+	void defaultFrom() {
 
 		MailMessage message = new MailMessage();
 		message.defaultFrom(" a@a.com ", "  b  ");
@@ -742,7 +673,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void defaultFrom_2() {
+	void defaultFrom_2() {
 
 		MailMessage message = new MailMessage();
 		message.from("c@c.com");
@@ -756,7 +687,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void defaultFrom_3() {
+	void defaultFrom_3() {
 
 		MailMessage message = new MailMessage();
 		message.from(" a@a.com ", null);
@@ -772,7 +703,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void subject() {
+	void subject() {
 
 		MailMessage message = new MailMessage();
 		message.subject(null);
@@ -789,7 +720,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void content() {
+	void content() {
 
 		MailMessage message = new MailMessage();
 		message.content(null);
@@ -806,7 +737,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void headers() {
+	void headers() {
 
 		MailMessage message = new MailMessage();
 		message.headers(" a ", " b ");
@@ -831,34 +762,25 @@ public class MailMessageTest {
 		assertEquals("c", message.getHeaders().get("b"));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void headers_fail1() {
+	@Test
+	void headers_fail1() {
 
 		MailMessage message = new MailMessage();
-		try {
-			message.headers("  ", "b");
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing header name!", e.getMessage());
-			throw e;
-		}
-	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void headers_fail2() {
-
-		MailMessage message = new MailMessage();
-		try {
-			message.headers(" test ", " ");
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing header value!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> message.headers("  ", "b"));
+		assertEquals("Missing header name!", e.getMessage());
 	}
 
 	@Test
-	public void exclude() {
+	void headers_fail2() {
+
+		MailMessage message = new MailMessage();
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> message.headers(" test ", " "));
+		assertEquals("Missing header value!", e.getMessage());
+	}
+
+	@Test
+	void exclude() {
 
 		MailMessage message = new MailMessage();
 		assertFalse(message.excluded("a"));
@@ -872,21 +794,16 @@ public class MailMessageTest {
 		assertTrue(message.excluded("b@email.com"));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void exclude_fail() {
+	@Test
+	void exclude_fail() {
 
 		MailMessage message = new MailMessage();
-		try {
-			message.exclude("  ");
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing excluded email address!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> message.exclude("  "));
+		assertEquals("Missing excluded email address!", e.getMessage());
 	}
 
 	@Test
-	public void attachment() {
+	void attachment() {
 
 		MailMessage message = new MailMessage();
 		message.attachment(" 1 ", " 2 ", " 3 ");
@@ -896,46 +813,29 @@ public class MailMessageTest {
 		assertEquals("3", message.getAttachments().get(0).type);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void attachment_fail1() {
+	@Test
+	void attachment_fail1() {
 
 		MailMessage message = new MailMessage();
-
-		try {
-			message.attachment(" ", "2", "3");
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing attachment content!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> message.attachment(" ", "2", "3"));
+		assertEquals("Missing attachment content!", e.getMessage());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void attachment_fail2() {
+	@Test
+	void attachment_fail2() {
 
 		MailMessage message = new MailMessage();
-
-		try {
-			message.attachment("1", " ", "3");
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing attachment file name!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> message.attachment("1", " ", "3"));
+		assertEquals("Missing attachment file name!", e.getMessage());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void attachment_fail3() {
+	@Test
+	void attachment_fail3() {
 
 		MailMessage message = new MailMessage();
 
-		try {
-			message.attachment("1", "2", " ");
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing attachment mime type!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> message.attachment("1", "2", " "));
+		assertEquals("Missing attachment mime type!", e.getMessage());
 	}
 
 	private Session getSession() {
@@ -945,7 +845,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void getMessage_basic() throws MessagingException, IOException {
+	void getMessage_basic() throws MessagingException, IOException {
 
 		MailMessage message = new MailMessage();
 		message.from("from@email.com")
@@ -964,7 +864,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void getMessage_basic_2() throws MessagingException, IOException {
+	void getMessage_basic_2() throws MessagingException, IOException {
 
 		MailMessage message = new MailMessage();
 		message.from("from@email.com").to("some@guy.com")
@@ -982,7 +882,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void getMessage_withCCandBCC() throws MessagingException, IOException {
+	void getMessage_withCCandBCC() throws MessagingException, IOException {
 
 		MailMessage message = new MailMessage();
 		message.from("from@email.com")
@@ -1004,7 +904,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void getMessage_withEmailAndName() throws MessagingException, IOException {
+	void getMessage_withEmailAndName() throws MessagingException, IOException {
 
 		MailMessage message = new MailMessage();
 		message.from("from@email.com", "from")
@@ -1026,7 +926,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void getMessage_withEmailAndNameMultiple() throws MessagingException, IOException {
+	void getMessage_withEmailAndNameMultiple() throws MessagingException, IOException {
 
 		MailMessage message = new MailMessage();
 
@@ -1076,7 +976,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void getMessage_attachment() throws MessagingException, IOException {
+	void getMessage_attachment() throws MessagingException, IOException {
 
 		MailMessage message = new MailMessage();
 		message.from("from@email.com")
@@ -1112,7 +1012,7 @@ public class MailMessageTest {
 	}
 
 	@Test
-	public void getMessage_attachment_2() throws MessagingException, IOException {
+	void getMessage_attachment_2() throws MessagingException, IOException {
 
 		MailMessage message = new MailMessage();
 		message.from("from@email.com")
@@ -1141,100 +1041,69 @@ public class MailMessageTest {
 		assertEquals("txt/html; name=some.file", part.getContentType());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void getMessage_missingAll() {
+	@Test
+	void getMessage_missingAll() {
 
 		MailMessage message = new MailMessage();
-
-		try {
-			message.getMessage(getSession());
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("No email address given!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> message.getMessage(getSession()));
+		assertEquals("No email address given!", e.getMessage());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void getMessage_missingTo() {
+	@Test
+	void getMessage_missingTo() {
 
 		MailMessage message = new MailMessage();
-		message.cc("test");
+		message.cc("test@test.com");
 
-		try {
-			message.getMessage(getSession());
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing to email address(es)!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> message.getMessage(getSession()));
+		assertEquals("Missing to email address(es)!", e.getMessage());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void getMessage_missingTo_excludeAll() {
+	@Test
+	void getMessage_missingTo_excludeAll() {
 
 		MailMessage message = new MailMessage();
-		message.to("test")
-			   .to("test2")
-			   .to("test3")
-			   .exclude("test")
-			   .exclude("test2")
-			   .exclude("test3");
+		message.to("test@test.com")
+			   .to("test2@test.com")
+			   .to("test3@test.com")
+			   .exclude("test@test.com")
+			   .exclude("test2@test.com")
+			   .exclude("test3@test.com");
 
-		try {
-			message.getMessage(getSession());
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("All to email address(es) are excluded!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> message.getMessage(getSession()));
+		assertEquals("All to email address(es) are excluded!", e.getMessage());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void getMessage_missingFrom() {
+	@Test
+	void getMessage_missingFrom() {
 
 		MailMessage message = new MailMessage();
-		message.to("test");
+		message.to("test@test.com");
 
-		try {
-			message.getMessage(getSession());
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing from email address!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> message.getMessage(getSession()));
+		assertEquals("Missing from email address!", e.getMessage());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void getMessage_missingSubject() {
+	@Test
+	void getMessage_missingSubject() {
 
 		MailMessage message = new MailMessage();
-		message.to("test")
-			   .from("from");
+		message.to("test@test.com")
+			   .from("from@from.com");
 
-		try {
-			message.getMessage(getSession());
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing email subject!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> message.getMessage(getSession()));
+		assertEquals("Missing email subject!", e.getMessage());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void getMessage_missingContent() {
+	@Test
+	void getMessage_missingContent() {
 
 		MailMessage message = new MailMessage();
-		message.to("test")
-			   .from("from")
+		message.to("test@test.com")
+			   .from("from@from.com")
 			   .subject("subject");
 
-		try {
-			message.getMessage(getSession());
-		}
-		catch (IllegalArgumentException e) {
-			assertEquals("Missing email content!", e.getMessage());
-			throw e;
-		}
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> message.getMessage(getSession()));
+		assertEquals("Missing email content!", e.getMessage());
 	}
 }

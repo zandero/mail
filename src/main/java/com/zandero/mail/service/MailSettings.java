@@ -3,6 +3,7 @@ package com.zandero.mail.service;
 import com.zandero.settings.Settings;
 import com.zandero.utils.Assert;
 import com.zandero.utils.StringUtils;
+import com.zandero.utils.extra.ValidatingUtils;
 
 public class MailSettings extends Settings {
 
@@ -16,12 +17,10 @@ public class MailSettings extends Settings {
 
 	public static final String SMTP_PASSWORD = "smtp_password";
 
-	public static final String SMTP_DEFAULT_FROM_NAME = "smtp_from_name";
-
-	public static final String SMTP_DEFAULT_FROM_EMAIL = "smtp_from_email";
+	public static final String DEFAULT_FROM_NAME = "default_from_name";
+	public static final String DEFAULT_FROM_EMAIL = "default_from_email";
 
 	private static final String SERVICE_API_KEY = "api_key";
-
 
 	public MailSettings(MailSettings.Builder builder) {
 
@@ -110,12 +109,12 @@ public class MailSettings extends Settings {
 
 	public String getDefaultFromMail() {
 
-		return getString(SMTP_DEFAULT_FROM_EMAIL);
+		return getString(DEFAULT_FROM_EMAIL);
 	}
 
 	public String getDefaultFromName() {
 
-		return findString(SMTP_DEFAULT_FROM_NAME);
+		return findString(DEFAULT_FROM_NAME);
 	}
 
 	public String getSmtpUrl() {
@@ -153,14 +152,18 @@ public class MailSettings extends Settings {
 
 		public Builder() {}
 
+		/**
+		 * @param settings SMTP setup
+		 */
 		public Builder(Settings settings) {
 
 			Assert.notNull(settings, "Missing settings!");
-			// add (should is present by default)
+			// add (should be present by default)
 			smtpUrl(settings.getString(MailSettings.SMTP_URL));
 			credentials(settings.getString(MailSettings.SMTP_USERNAME), settings.getString(MailSettings.SMTP_PASSWORD));
 			port(settings.getInt(MailSettings.SMTP_PORT));
-			defaultEmail(settings.getString(MailSettings.SMTP_DEFAULT_FROM_EMAIL), settings.getString(MailSettings.SMTP_DEFAULT_FROM_NAME));
+
+			defaultEmail(settings.getString(MailSettings.DEFAULT_FROM_EMAIL), settings.getString(MailSettings.DEFAULT_FROM_NAME));
 
 			// optional add if found
 			String key = settings.findString(MailSettings.SERVICE_API_KEY);
@@ -199,10 +202,11 @@ public class MailSettings extends Settings {
 		public Builder defaultEmail(String email, String name) {
 
 			Assert.notNullOrEmptyTrimmed(email, "Missing default from email!");
-			add(SMTP_DEFAULT_FROM_EMAIL, email.trim());
+			Assert.isTrue(ValidatingUtils.isEmail(email), "Invalid default email!");
+			add(DEFAULT_FROM_EMAIL, email.trim().toLowerCase());
 
 			if (!StringUtils.isNullOrEmptyTrimmed(name)) {
-				add(SMTP_DEFAULT_FROM_NAME, name.trim());
+				add(DEFAULT_FROM_NAME, name.trim());
 			}
 
 			return this;

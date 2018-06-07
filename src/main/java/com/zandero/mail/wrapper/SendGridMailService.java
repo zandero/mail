@@ -16,27 +16,29 @@ import java.util.HashMap;
 /**
  * SendGrid mail service integration (API V3 usage with API key)
  */
-public class SendGridMailServiceImpl implements MailService {
+public class SendGridMailService implements MailService {
 
-	private static final Logger log = LoggerFactory.getLogger(SendGridMailServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(SendGridMailService.class);
 
 	private final SendGrid sendgrid;
 
 	private final com.zandero.mail.service.MailSettings mailSettings;
 
-	public SendGridMailServiceImpl(MailSettings settings) {
+	/**
+	 * Initialized mail service for SendGrid
+	 * @param settings containing api key, default from email as minimum
+	 */
+	public SendGridMailService(MailSettings settings) {
 
 		Assert.notNull(settings, "Missing SendGrid mail settings!");
+		Assert.notNullOrEmptyTrimmed(settings.getApiKey(), "Missing Sendgrid API key!");
+
 		String key = settings.getApiKey();
 
-		Assert.notNullOrEmptyTrimmed(key, "Missing Sendgrid API key!");
-
-		// log only first 6 characters of key ... should be enough to see that everything is OK
-		String keyPart = StringUtils.trimTextDown(key, 9, "***");
-		log.info("Initializing SendGrid with key: " + keyPart);
+		// log only first characters of key ... should be enough to see that everything is OK
+		log.info("Initializing SendGrid with key: " + StringUtils.trimTextDown(key, 9, "***"));
 
 		sendgrid = new SendGrid(key);
-
 		log.info("Using SendGrid client version: " + sendgrid.getVersion());
 
 		mailSettings = settings;

@@ -137,6 +137,8 @@ public class SendGridMailService implements MailService {
 		}
 		mail.addContent(mailContent);
 
+		// TODO: missing attachments
+
 		return mail.build();
 	}
 }

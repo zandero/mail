@@ -28,7 +28,7 @@ public class MailMessage implements Serializable {
 	private static final long serialVersionUID = 355919787686445837L;
 	private static final String UTF_8 = "UTF-8";
 
-	Map<Message.RecipientType, Map<String, String>> emails;
+	Map<Message.RecipientType, Map<String, String>> emails; // type / email-name (pairs)
 
 	/**
 	 * Email subject (title)
@@ -79,6 +79,7 @@ public class MailMessage implements Serializable {
 
 	/**
 	 * Build mail message
+	 *
 	 * @param session mail session
 	 * @return build mime message
 	 * @throws IllegalArgumentException in case massage could not be build up, wraps MessagingException and UnsupportedEncodingException
@@ -141,14 +142,13 @@ public class MailMessage implements Serializable {
 			try {
 				// simple message .. no attachment and only content or html content
 				if ((attachments == null || attachments.size() == 0) &&
-					((htmlContent == null && content != null) ||
-						(htmlContent != null && content == null))) {
+				    ((htmlContent == null && content != null) ||
+				     (htmlContent != null && content == null))) {
 
 					if (StringUtils.isNullOrEmptyTrimmed(content)) {
 						msg.addHeader("Content-Type", "text/html");
 						msg.setContent(htmlContent, "text/html; charset=" + UTF_8);
-					}
-					else {
+					} else {
 						msg.setContent(content, "text/plain; charset=" + UTF_8);
 					}
 				}
@@ -220,8 +220,7 @@ public class MailMessage implements Serializable {
 				if (!excluded(email)) {
 					msg.addRecipient(type, new InternetAddress(email, name, UTF_8));
 					log.info("Sending: " + type + ": " + email + " (" + name + ")");
-				}
-				else {
+				} else {
 					log.info("Excluding: " + type + ": " + email + " (" + name + ")");
 				}
 			}
@@ -247,8 +246,8 @@ public class MailMessage implements Serializable {
 		}
 
 		if (!StringUtils.isNullOrEmptyTrimmed(email) &&
-			StringUtils.equals(fromEmail, email.trim(), true) &&
-			StringUtils.isNullOrEmptyTrimmed(fromName)) {
+		    StringUtils.equals(fromEmail, email.trim(), true) &&
+		    StringUtils.isNullOrEmptyTrimmed(fromName)) {
 			from(email, name);
 		}
 
@@ -270,8 +269,7 @@ public class MailMessage implements Serializable {
 
 		if (StringUtils.isNullOrEmptyTrimmed(name)) {
 			fromName = null;
-		}
-		else {
+		} else {
 			fromName = name.trim();
 		}
 
@@ -506,8 +504,8 @@ public class MailMessage implements Serializable {
 		}
 
 		attachments.add(new MailAttachment(mimeType.trim(),
-			content.trim(),
-			fileName.trim()));
+		                                   content.trim(),
+		                                   fileName.trim()));
 		return this;
 	}
 
@@ -564,6 +562,7 @@ public class MailMessage implements Serializable {
 		return null;
 	}
 
+
 	/**
 	 * @return list of CC emails with names (if given) where email is key
 	 */
@@ -586,6 +585,37 @@ public class MailMessage implements Serializable {
 		}
 
 		return null;
+	}
+
+	/**
+	 * @param type recipient type
+	 * @return emails formated as Bob <bob@email.com> separated with commas or null if empty
+	 */
+	public String getEmailsAsString(Message.RecipientType type) {
+
+		Assert.notNull(type, "Missing recipient type!");
+		Map<String, String> emailNames = emails.get(type);
+		if (emailNames == null) {
+			return null;
+		}
+
+		List<String> items = new ArrayList<>();
+		for (String email : emailNames.keySet()) {
+
+			String name = emailNames.get(email);
+			if (StringUtils.isNullOrEmptyTrimmed(name) ||
+			    StringUtils.equals(email, name, true)) {
+				items.add(email);
+			} else {
+				items.add(name + " <" + email + ">");
+			}
+		}
+
+		if (items.size() == 0) {
+			return null;
+		}
+
+		return StringUtils.join(items, ", ");
 	}
 
 	/**

@@ -66,6 +66,9 @@ public class MailMessageTest {
 		assertTrue(message.emails.get(Message.RecipientType.TO).containsKey("mail2@email.com"));
 		assertNull(message.emails.get(Message.RecipientType.TO).get("mail2@email.com"));
 		assertEquals(2, message.emails.get(Message.RecipientType.TO).size());
+
+		String list = message.getEmailsAsString(Message.RecipientType.TO);
+		assertEquals("mail@email.com, mail2@email.com", list);
 	}
 
 	@Test
@@ -91,6 +94,9 @@ public class MailMessageTest {
 		assertEquals("name2", message.emails.get(Message.RecipientType.TO).get("mail2@email.com"));
 
 		assertEquals(2, message.emails.get(Message.RecipientType.TO).size());
+
+		String list = message.getEmailsAsString(Message.RecipientType.TO);
+		assertEquals("new <mail@email.com>, name2 <mail2@email.com>", list);
 	}
 
 	@Test

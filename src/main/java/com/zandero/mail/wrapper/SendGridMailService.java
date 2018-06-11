@@ -1,17 +1,19 @@
 package com.zandero.mail.wrapper;
 
-import com.sendgrid.*;
+import com.zandero.http.Http;
 import com.zandero.mail.MailMessage;
 import com.zandero.mail.service.MailSendResult;
 import com.zandero.mail.service.MailService;
-import com.zandero.mail.service.MailSettings;
+import com.zandero.mail.wrapper.sendgrid.Mail;
 import com.zandero.utils.Assert;
 import com.zandero.utils.StringUtils;
+import com.zandero.utils.extra.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * SendGrid mail service integration (API V3 usage with API key)
@@ -20,125 +22,64 @@ public class SendGridMailService implements MailService {
 
 	private static final Logger log = LoggerFactory.getLogger(SendGridMailService.class);
 
-	private final SendGrid sendgrid;
+	private final String defaultFrom;
 
-	private final com.zandero.mail.service.MailSettings mailSettings;
+	private final String apiKey;
+	private final String defaultFromName;
 
 	/**
 	 * Initialized mail service for SendGrid
-	 * @param settings containing api key, default from email as minimum
 	 */
-	public SendGridMailService(MailSettings settings) {
+	public SendGridMailService(String key, String defaultEmail, String defaultName) {
 
-		Assert.notNull(settings, "Missing SendGrid mail settings!");
-		Assert.notNullOrEmptyTrimmed(settings.getApiKey(), "Missing Sendgrid API key!");
+		Assert.notNullOrEmptyTrimmed(key, "Missing Sendgrid API key!");
 
-		String key = settings.getApiKey();
+		apiKey = key;
+		defaultFrom = defaultEmail;
+		defaultFromName = defaultName;
 
 		// log only first characters of key ... should be enough to see that everything is OK
-		log.info("Initializing SendGrid with key: " + StringUtils.trimTextDown(key, 9, "***"));
-
-		sendgrid = new SendGrid(key);
-		log.info("Using SendGrid client version: " + sendgrid.getVersion());
-
-		mailSettings = settings;
+		log.info("Initializing SendGrid with key: " + StringUtils.trimTextDown(apiKey, 9, "***"));
 	}
 
 	@Override
 	public MailSendResult send(MailMessage message) {
 
-		try {
-			Request request = new Request();
-			request.endpoint = "mail/send";
-			request.method = Method.POST;
+		Assert.notNull(message, "Missing mail message!");
+		message.defaultFrom(defaultFrom, defaultFromName);
 
-			request.headers = new HashMap<>();
-			request.headers.put("Accept", "application/json");
-
-			request.body = getMessageBody(message);
-
-			Response response = sendgrid.api(request);
-
-			log.debug("SendGrid returned: " + response.statusCode + ": " + response.body + ", header: " + StringUtils.join(response.headers, ", "));
-
-			String messageId = response.headers != null ? response.headers.get("X-Message-Id") : null;
-			return new MailSendResult(response.statusCode, messageId);
+		/*String from = StringUtils.isNullOrEmptyTrimmed(message.getFromEmail()) ? defaultFrom : message.getFromEmail();
+		if (!StringUtils.isNullOrEmptyTrimmed(message.getFromName())) {
+			from = message.getFromName() + " <" + from + ">";
 		}
-		catch (IOException e) {
-			log.error("Failed to send mail: ", e);
+
+		String recipients = message.getEmailsAsString(Message.RecipientType.TO);
+		String ccRecipients = message.getEmailsAsString(Message.RecipientType.CC);
+		String bccRecipien/bjuLts = message.getEmailsAsString(Message.RecipientType.BCC);
+*/
+		try {
+			String url = "https://api.sendgrid.com/v3/mail/send";
+
+			Map<String, String> headers = new HashMap<>();
+			headers.put("Authorization", "Bearer " + apiKey);
+			headers.put("Content-Type", "application/json");
+
+			String body = JsonUtils.toJson(new Mail(message));
+			Http.Response response = Http.post(url, body, null, headers);
+
+			if (response.not(HttpURLConnection.HTTP_OK, HttpURLConnection.HTTP_CREATED, HttpURLConnection.HTTP_ACCEPTED)) {
+				log.error("Failed to send out mail: ({}) {}", response.getCode(), response.getResponse());
+				return MailSendResult.fail();
+			}
+
+			// TODO: get message id header ... from response
+
+			// deserialize json from response if needed ... for now it is as it is ...
+			return MailSendResult.ok(/* trackingId */);
+		}
+		catch (Exception e) {
+			log.error("Failed to send out mail!", e);
 			return MailSendResult.fail();
 		}
-	}
-
-	/**
-	 * Creates JSON compatible with SendGrid to send out mail
-	 */
-	private String getMessageBody(MailMessage message) throws IOException {
-
-		Mail mail = new Mail();
-
-		// TO
-		for (String toEmail : message.getToEmails().keySet()) {
-
-			Personalization person = new Personalization();
-
-			String name = message.getToEmails().get(toEmail);
-
-			Email toEmailAddress = new Email(toEmail);
-			if (!StringUtils.isNullOrEmptyTrimmed(name)) {
-				toEmailAddress.setName(name);
-			}
-
-			person.addTo(toEmailAddress);
-
-			// if message should be delayed ... than set send at
-			Long time = message.getSendAt(toEmail);
-			if (time != null && time > System.currentTimeMillis()) {
-				person.setSendAt(time / 1000); // transform to UNIX timestamp
-			}
-
-			mail.addPersonalization(person);
-		}
-
-		// FROM
-		String fromEmail = message.getFromEmail();
-		Email fromEmailAddress;
-		if (StringUtils.isNullOrEmptyTrimmed(fromEmail)) {
-			fromEmailAddress = new Email(mailSettings.getDefaultFromMail());
-		}
-		else {
-			fromEmailAddress = new Email(fromEmail);
-		}
-
-		if (StringUtils.isNullOrEmptyTrimmed(message.getFromName())) {
-			fromEmailAddress.setName(mailSettings.getDefaultFromName());
-		}
-		else {
-			fromEmailAddress.setName(message.getFromName());
-		}
-		mail.setFrom(fromEmailAddress);
-
-		// SUBJECT
-		mail.setSubject(message.getSubject());
-
-		// CONTENT
-		String content = message.getContent();
-		String htmlContent = message.getHtmlContent();
-
-		Content mailContent = new Content();
-
-		if (!StringUtils.isNullOrEmptyTrimmed(content)) {
-			mailContent.setType("text/plain");
-			mailContent.setValue(content);
-		}
-		else {
-			mailContent.setType("text/html");
-			mailContent.setValue(htmlContent);
-		}
-		mail.addContent(mailContent);
-
-		// TODO: missing attachments
-
-		return mail.build();
 	}
 }

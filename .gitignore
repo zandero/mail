@@ -12,4 +12,4 @@
 */*.iws
 target/
 mail.iml
-*/test/resources/mailgun.properties
+*/test/resources/*.properties

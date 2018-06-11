@@ -78,11 +78,11 @@ public class MailGunMailService implements MailService {
 	 * @param content HTML content
 	 * @return true if mail was send out, false otherwise
 	 */
-	public MailSendResult sendMail(String address, String title, String content) {
+	/*public MailSendResult sendMail(String address, String title, String content) {
 
 		MailMessage builder = new MailMessage().to(address).subject(title).content(content);
 		return send(builder);
-	}
+	}*/
 
 	@Override
 	public MailSendResult send(MailMessage message) {
@@ -140,6 +140,7 @@ public class MailGunMailService implements MailService {
 			}
 
 			// deserialize json from response if needed ... for now it is as it is ...
+			// TODO: get tracking id
 			return MailSendResult.ok();
 		}
 		catch (Exception e) {

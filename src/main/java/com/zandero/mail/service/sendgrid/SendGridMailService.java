@@ -7,6 +7,7 @@ import com.zandero.mail.service.MailService;
 import com.zandero.utils.Assert;
 import com.zandero.utils.StringUtils;
 import com.zandero.utils.extra.JsonUtils;
+import com.zandero.utils.extra.ValidatingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,12 +30,15 @@ public class SendGridMailService implements MailService {
 	/**
 	 * Initialized mail service for SendGrid
 	 */
-	public SendGridMailService(String key, String defaultEmail, String defaultName) {
+	public SendGridMailService(String sendGridApiKey, String defaultEmail, String defaultName) {
 
-		Assert.notNullOrEmptyTrimmed(key, "Missing Sendgrid API key!");
+		Assert.notNullOrEmptyTrimmed(sendGridApiKey, "Missing api key!");
 
-		apiKey = key;
-		defaultFrom = StringUtils.trimToNull(defaultEmail);
+		Assert.notNullOrEmptyTrimmed(defaultEmail, "Missing default from email!");
+		Assert.isTrue(ValidatingUtils.isEmail(defaultEmail), "Invalid default from email!");
+
+		apiKey = StringUtils.trim(sendGridApiKey);
+		defaultFrom = StringUtils.trim(defaultEmail).toLowerCase();
 		defaultFromName = StringUtils.trimToNull(defaultName);
 
 		// log only first characters of key ... should be enough to see that everything is OK
@@ -45,7 +49,7 @@ public class SendGridMailService implements MailService {
 	public MailSendResult send(MailMessage message) {
 
 		Assert.notNull(message, "Missing mail message!");
-		message.defaultFrom(defaultFrom, defaultFromName);
+		message.defaultFrom(defaultFrom, defaultFromName); // if from is set then this is ignored
 
 		try {
 			String url = "https://api.sendgrid.com/v3/mail/send";

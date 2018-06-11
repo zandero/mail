@@ -31,20 +31,21 @@ public class MailGunMailService implements MailService {
 	private String defaultFrom;
 	private String defaultFromName;
 
-	public MailGunMailService(String mailGunApiKey, String domainName, String defaultFromEmail, String defaultFromName) {
+	public MailGunMailService(String mailGunApiKey, String domainName, String defaultEmail, String defaultName) {
+
+		Assert.notNullOrEmptyTrimmed(mailGunApiKey, "Missing api key!");
 
 		Assert.notNullOrEmptyTrimmed(domainName, "Missing mail domain name!");
 		Assert.isTrue(ValidatingUtils.isDomain(domainName), "Invalid domain name!");
 
-		Assert.notNullOrEmptyTrimmed(defaultFromEmail, "Missing default from email!");
-		Assert.isTrue(ValidatingUtils.isEmail(defaultFromEmail), "Invalid default from email!");
+		Assert.notNullOrEmptyTrimmed(defaultEmail, "Missing default from email!");
+		Assert.isTrue(ValidatingUtils.isEmail(defaultEmail), "Invalid default from email!");
 
-		Assert.notNullOrEmptyTrimmed(mailGunApiKey, "Missing api key!");
+		domain = StringUtils.trim(domainName);
+		apiKey = StringUtils.trim(mailGunApiKey);
 
-		domain = domainName;
-		apiKey = mailGunApiKey;
-		defaultFrom = defaultFromEmail;
-		this.defaultFromName = defaultFromName;
+		defaultFrom = StringUtils.trim(defaultEmail).toLowerCase();
+		defaultFromName = StringUtils.trimToNull(defaultName);
 
 		log.info("Initializing MailGun with key: " + StringUtils.trimTextDown(apiKey, 9, "***"));
 	}
@@ -53,8 +54,10 @@ public class MailGunMailService implements MailService {
 	public MailSendResult send(MailMessage message) {
 
 		Assert.notNull(message, "Missing mail message!");
+		message.defaultFrom(defaultFrom, defaultFromName); // if from is set then this is ignored
 
-		String from = StringUtils.isNullOrEmptyTrimmed(message.getFromEmail()) ? defaultFrom : message.getFromEmail();
+		// format to name <email>
+		String from = message.getFromEmail();
 		if (!StringUtils.isNullOrEmptyTrimmed(message.getFromName())) {
 			from = message.getFromName() + " <" + from + ">";
 		}

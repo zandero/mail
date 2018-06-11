@@ -33,12 +33,14 @@ public class Mail {
 		subject = message.getSubject();
 		content = new ArrayList<>();
 
-		if (!StringUtils.isNullOrEmptyTrimmed(message.getContent())) {
-			content.add(new Content("text/plain", message.getContent()));
+		String text = message.getContent();
+		if (!StringUtils.isNullOrEmptyTrimmed(text)) {
+			content.add(new Content("text/plain", text));
 		}
 
-		if (!StringUtils.isNullOrEmptyTrimmed(message.getHtmlContent())) {
-			content.add(new Content("text/html", message.getHtmlContent()));
+		text = message.getHtmlContent();
+		if (!StringUtils.isNullOrEmptyTrimmed(text)) {
+			content.add(new Content("text/html", text));
 		}
 
 		personalization = new ArrayList<>();

@@ -1,4 +1,4 @@
-package com.zandero.mail.wrapper.sendgrid;
+package com.zandero.mail.service.sendgrid;
 
 /*
  * Copied from

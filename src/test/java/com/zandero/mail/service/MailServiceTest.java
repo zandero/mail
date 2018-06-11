@@ -1,4 +1,4 @@
-package com.zandero.mail.wrapper;
+package com.zandero.mail.service;
 
 import com.zandero.utils.StringUtils;
 

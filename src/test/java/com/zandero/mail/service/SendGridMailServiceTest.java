@@ -1,11 +1,15 @@
-package com.zandero.mail.wrapper;
+package com.zandero.mail.service;
 
+import com.zandero.mail.service.sendgrid.SendGridMailService;
 import com.zandero.utils.ResourceUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -22,6 +26,9 @@ class SendGridMailServiceTest extends MailServiceTest {
 		Map<String, String> properties = getProperties(list);
 
 		SendGridMailService service = new SendGridMailService(properties.get("key"), properties.get("from"), null);
-		service.send(properties.get("to"), "Somebody","Test", "Hello!");
+		MailSendResult response = service.send(properties.get("to"), "Somebody", "Test", "Hello!");
+
+		assertTrue(response.isSuccessful());
+		assertNotNull(response.getMessage());
 	}
 }

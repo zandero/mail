@@ -1,10 +1,9 @@
-package com.zandero.mail.wrapper;
+package com.zandero.mail.service.sendgrid;
 
 import com.zandero.http.Http;
 import com.zandero.mail.MailMessage;
 import com.zandero.mail.service.MailSendResult;
 import com.zandero.mail.service.MailService;
-import com.zandero.mail.wrapper.sendgrid.Mail;
 import com.zandero.utils.Assert;
 import com.zandero.utils.StringUtils;
 import com.zandero.utils.extra.JsonUtils;
@@ -22,9 +21,9 @@ public class SendGridMailService implements MailService {
 
 	private static final Logger log = LoggerFactory.getLogger(SendGridMailService.class);
 
-	private final String defaultFrom;
-
 	private final String apiKey;
+
+	private final String defaultFrom;
 	private final String defaultFromName;
 
 	/**
@@ -35,8 +34,8 @@ public class SendGridMailService implements MailService {
 		Assert.notNullOrEmptyTrimmed(key, "Missing Sendgrid API key!");
 
 		apiKey = key;
-		defaultFrom = defaultEmail;
-		defaultFromName = defaultName;
+		defaultFrom = StringUtils.trimToNull(defaultEmail);
+		defaultFromName = StringUtils.trimToNull(defaultName);
 
 		// log only first characters of key ... should be enough to see that everything is OK
 		log.info("Initializing SendGrid with key: " + StringUtils.trimTextDown(apiKey, 9, "***"));
@@ -48,15 +47,6 @@ public class SendGridMailService implements MailService {
 		Assert.notNull(message, "Missing mail message!");
 		message.defaultFrom(defaultFrom, defaultFromName);
 
-		/*String from = StringUtils.isNullOrEmptyTrimmed(message.getFromEmail()) ? defaultFrom : message.getFromEmail();
-		if (!StringUtils.isNullOrEmptyTrimmed(message.getFromName())) {
-			from = message.getFromName() + " <" + from + ">";
-		}
-
-		String recipients = message.getEmailsAsString(Message.RecipientType.TO);
-		String ccRecipients = message.getEmailsAsString(Message.RecipientType.CC);
-		String bccRecipien/bjuLts = message.getEmailsAsString(Message.RecipientType.BCC);
-*/
 		try {
 			String url = "https://api.sendgrid.com/v3/mail/send";
 
@@ -72,14 +62,13 @@ public class SendGridMailService implements MailService {
 				return MailSendResult.fail();
 			}
 
-			// TODO: get message id header ... from response
-
-			// deserialize json from response if needed ... for now it is as it is ...
-			return MailSendResult.ok(/* trackingId */);
+			// get message id header ... from response
+			String messageId = response.getHeader("X-Message-Id");
+			return MailSendResult.ok(messageId);
 		}
 		catch (Exception e) {
 			log.error("Failed to send out mail!", e);
-			return MailSendResult.fail();
+			return MailSendResult.fail(e.getMessage());
 		}
 	}
 }

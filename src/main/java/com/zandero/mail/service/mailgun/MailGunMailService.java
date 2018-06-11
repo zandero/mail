@@ -1,14 +1,13 @@
-package com.zandero.mail.wrapper;
+package com.zandero.mail.service.mailgun;
 
 import com.zandero.http.Http;
 import com.zandero.http.HttpUtils;
-import com.zandero.http.TrustAnyTrustManager;
 import com.zandero.mail.MailMessage;
 import com.zandero.mail.service.MailSendResult;
 import com.zandero.mail.service.MailService;
-import com.zandero.mail.service.MailSettings;
 import com.zandero.utils.Assert;
 import com.zandero.utils.StringUtils;
+import com.zandero.utils.extra.JsonUtils;
 import com.zandero.utils.extra.UrlUtils;
 import com.zandero.utils.extra.ValidatingUtils;
 import org.slf4j.LoggerFactory;
@@ -28,26 +27,12 @@ public class MailGunMailService implements MailService {
 
 	private String domain;
 	private String apiKey;
+
 	private String defaultFrom;
+	private String defaultFromName;
 
-	public MailGunMailService(String mailGunApiKey, String domainName, String defaultFromEmail) {
+	public MailGunMailService(String mailGunApiKey, String domainName, String defaultFromEmail, String defaultFromName) {
 
-		init(mailGunApiKey, domainName, defaultFromEmail);
-	}
-
-	/**
-	 * Initialized mail service for SendGrid
-	 * @param settings containing api key, default from email as minimum
-	 */
-	public MailGunMailService(MailSettings settings) {
-
-		Assert.notNull(settings, "Missing SendGrid mail settings!");
-		Assert.notNullOrEmptyTrimmed(settings.getApiKey(), "Missing Sendgrid API key!");
-
-		init(settings.getApiKey(), settings.getServiceDomain(), settings.getDefaultFromMail());
-	}
-
-	private void init(String mailGunApiKey, String domainName, String defaultFromEmail) {
 		Assert.notNullOrEmptyTrimmed(domainName, "Missing mail domain name!");
 		Assert.isTrue(ValidatingUtils.isDomain(domainName), "Invalid domain name!");
 
@@ -59,30 +44,10 @@ public class MailGunMailService implements MailService {
 		domain = domainName;
 		apiKey = mailGunApiKey;
 		defaultFrom = defaultFromEmail;
+		this.defaultFromName = defaultFromName;
 
 		log.info("Initializing MailGun with key: " + StringUtils.trimTextDown(apiKey, 9, "***"));
-
-		try { // trust all ...
-			Http.setSSLSocketFactory(TrustAnyTrustManager.getSSLFactory());
-		}
-		catch (Exception e) {
-			log.error("Failed to set SSL socket factory: {}", e);
-		}
 	}
-
-	/**
-	 * Sends mail using mailGun API using only query string parameters
-	 *
-	 * @param address to send to
-	 * @param title   subject
-	 * @param content HTML content
-	 * @return true if mail was send out, false otherwise
-	 */
-	/*public MailSendResult sendMail(String address, String title, String content) {
-
-		MailMessage builder = new MailMessage().to(address).subject(title).content(content);
-		return send(builder);
-	}*/
 
 	@Override
 	public MailSendResult send(MailMessage message) {
@@ -139,13 +104,29 @@ public class MailGunMailService implements MailService {
 				return MailSendResult.fail();
 			}
 
-			// deserialize json from response if needed ... for now it is as it is ...
-			// TODO: get tracking id
-			return MailSendResult.ok();
+			// get tracking id
+			// {  "id": "<20180611195133.1.10869F48B8AD29FF@yourdomain.com>",  "message": "Queued. Thank you."}
+			String messageId = getMessageId(response.getResponse());
+			return MailSendResult.ok(messageId);
 		}
 		catch (Exception e) {
 			log.error("Failed to send out mail!", e);
 			return MailSendResult.fail();
+		}
+	}
+
+	private String getMessageId(String response) {
+		if (StringUtils.isNullOrEmptyTrimmed(response)) {
+			return null;
+		}
+
+		try {
+			MailGunSendResponse res = JsonUtils.fromJson(response, MailGunSendResponse.class);
+			return res != null ? res.id : null;
+		}
+		catch (IllegalArgumentException e) {
+			log.warn("Failed to parse MailGun send response: ", e);
+			return null;
 		}
 	}
 }

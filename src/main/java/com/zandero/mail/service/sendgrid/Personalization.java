@@ -1,4 +1,4 @@
-package com.zandero.mail.wrapper.sendgrid;
+package com.zandero.mail.service.sendgrid;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

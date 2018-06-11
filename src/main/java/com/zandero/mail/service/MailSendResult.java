@@ -7,17 +7,17 @@ public class MailSendResult {
 
 	private final int status;
 
-	private final String messageId;
+	private final String message;
 
 	/**
 	 * Set status and message id manually
 	 * @param statusCode http status code
-	 * @param id message id
+	 * @param text message
 	 */
-	public MailSendResult(int statusCode, String id) {
+	public MailSendResult(int statusCode, String text) {
 
 		status = statusCode;
-		messageId = id;
+		message = text;
 	}
 
 	/**
@@ -31,12 +31,12 @@ public class MailSendResult {
 
 	/**
 	 * Mail was send out successfully
-	 * @param messageId
+	 * @param message
 	 * @return mail success
 	 */
-	public static MailSendResult ok(String messageId) {
+	public static MailSendResult ok(String message) {
 
-		return new MailSendResult(200, messageId);
+		return new MailSendResult(200, message);
 	}
 
 	/**
@@ -46,6 +46,15 @@ public class MailSendResult {
 	public static MailSendResult fail() {
 
 		return new MailSendResult(400, null); // bad request
+	}
+
+	/**
+	 * Mail was not send out
+	 * @return mail send failure
+	 */
+	public static MailSendResult fail(String message) {
+
+		return new MailSendResult(400, message); // bad request
 	}
 
 	/**
@@ -63,9 +72,9 @@ public class MailSendResult {
 	 *
 	 * @return unique message id to associate send mail with
 	 */
-	public String getMessageId() {
+	public String getMessage() {
 
-		return messageId;
+		return message;
 	}
 
 	/**
@@ -79,6 +88,6 @@ public class MailSendResult {
 	@Override
 	public String toString() {
 
-		return status + " [" + (messageId == null ? "> no message id <" : messageId) + "]";
+		return status + " [" + (message == null ? "> no message id <" : message) + "]";
 	}
 }

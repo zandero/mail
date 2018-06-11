@@ -6,6 +6,7 @@ import com.zandero.http.TrustAnyTrustManager;
 import com.zandero.mail.MailMessage;
 import com.zandero.mail.service.MailSendResult;
 import com.zandero.mail.service.MailService;
+import com.zandero.mail.service.MailSettings;
 import com.zandero.utils.Assert;
 import com.zandero.utils.StringUtils;
 import com.zandero.utils.extra.UrlUtils;
@@ -25,12 +26,28 @@ public class MailGunMailService implements MailService {
 
 	private static final org.slf4j.Logger log = LoggerFactory.getLogger(MailGunMailService.class);
 
-	private final String domain;
-	private final String apiKey;
-	private final String defaultFrom;
+	private String domain;
+	private String apiKey;
+	private String defaultFrom;
 
-	public MailGunMailService(String domainName, String defaultFromEmail, String mailGunApiKey) {
+	public MailGunMailService(String mailGunApiKey, String domainName, String defaultFromEmail) {
 
+		init(mailGunApiKey, domainName, defaultFromEmail);
+	}
+
+	/**
+	 * Initialized mail service for SendGrid
+	 * @param settings containing api key, default from email as minimum
+	 */
+	public MailGunMailService(MailSettings settings) {
+
+		Assert.notNull(settings, "Missing SendGrid mail settings!");
+		Assert.notNullOrEmptyTrimmed(settings.getApiKey(), "Missing Sendgrid API key!");
+
+		init(settings.getApiKey(), settings.getServiceDomain(), settings.getDefaultFromMail());
+	}
+
+	private void init(String mailGunApiKey, String domainName, String defaultFromEmail) {
 		Assert.notNullOrEmptyTrimmed(domainName, "Missing mail domain name!");
 		Assert.isTrue(ValidatingUtils.isDomain(domainName), "Invalid domain name!");
 
@@ -42,6 +59,8 @@ public class MailGunMailService implements MailService {
 		domain = domainName;
 		apiKey = mailGunApiKey;
 		defaultFrom = defaultFromEmail;
+
+		log.info("Initializing MailGun with key: " + StringUtils.trimTextDown(apiKey, 9, "***"));
 
 		try { // trust all ...
 			Http.setSSLSocketFactory(TrustAnyTrustManager.getSSLFactory());

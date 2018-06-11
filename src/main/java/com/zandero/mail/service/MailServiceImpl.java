@@ -25,6 +25,11 @@ public class MailServiceImpl implements MailService {
 		settings = mailSettings;
 	}
 
+	/**
+	 * Sends message out via SMTP
+	 * @param builder to construct mail message
+	 * @return result of send
+	 */
 	@Override
 	public MailSendResult send(MailMessage builder) {
 
@@ -48,7 +53,6 @@ public class MailServiceImpl implements MailService {
 			log.info("Connecting to SMTP server: " + settings);
 
 			transport.connect(settings.getSmtpUrl(), settings.getSmtpPort(), settings.getSmtpUsername(), settings.getSmtpPassword());
-//			log.info("Sending e-mail to: " + JsonUtils.toJson(msg.getAllRecipients()));
 
 			transport.sendMessage(msg, msg.getAllRecipients());
 			log.info("Closing transport...");

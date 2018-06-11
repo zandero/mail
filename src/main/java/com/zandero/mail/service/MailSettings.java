@@ -21,6 +21,7 @@ public class MailSettings extends Settings {
 	public static final String DEFAULT_FROM_EMAIL = "default_from_email";
 
 	private static final String SERVICE_API_KEY = "api_key";
+	private static final String SERVICE_DOMAIN = "domain";
 
 	public MailSettings(MailSettings.Builder builder) {
 
@@ -140,6 +141,11 @@ public class MailSettings extends Settings {
 	public String getApiKey() {
 
 		return findString(SERVICE_API_KEY);
+	}
+
+	public String getServiceDomain() {
+
+		return getString(SERVICE_DOMAIN);
 	}
 
 	@Override

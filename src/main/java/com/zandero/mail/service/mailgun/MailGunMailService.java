@@ -31,6 +31,13 @@ public class MailGunMailService implements MailService {
 	private String defaultFrom;
 	private String defaultFromName;
 
+	/**
+	 * Initializes MailGun mailing service (API wrapper)
+	 * @param mailGunApiKey api key
+	 * @param domainName domain name
+	 * @param defaultEmail default from email if not from email is given in message
+	 * @param defaultName default from name if no from name is given in message
+	 */
 	public MailGunMailService(String mailGunApiKey, String domainName, String defaultEmail, String defaultName) {
 
 		Assert.notNullOrEmptyTrimmed(mailGunApiKey, "Missing api key!");
@@ -108,7 +115,6 @@ public class MailGunMailService implements MailService {
 			}
 
 			// get tracking id
-			// {  "id": "<20180611195133.1.10869F48B8AD29FF@yourdomain.com>",  "message": "Queued. Thank you."}
 			String messageId = getMessageId(response.getResponse());
 			return MailSendResult.ok(messageId);
 		}
@@ -118,6 +124,7 @@ public class MailGunMailService implements MailService {
 		}
 	}
 
+	// {  "id": "<20180611195133.1.10869F48B8AD29FF@yourdomain.com>",  "message": "Queued. Thank you."}
 	private String getMessageId(String response) {
 		if (StringUtils.isNullOrEmptyTrimmed(response)) {
 			return null;

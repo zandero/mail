@@ -589,7 +589,7 @@ public class MailMessage implements Serializable {
 
 	/**
 	 * @param type recipient type
-	 * @return emails formated as Bob <bob@email.com> separated with commas or null if empty
+	 * @return emails formated as Bob &lt;bob@email.com&gt; separated with commas or null if empty
 	 */
 	public String getEmailsAsString(Message.RecipientType type) {
 

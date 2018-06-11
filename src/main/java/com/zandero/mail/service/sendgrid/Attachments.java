@@ -203,6 +203,7 @@ public class Attachments {
     /**
      * Set the type of this attachment builder.
      * @param type the attachment type.
+     * @return self
      */
     public Builder withType(String type) {
       this.type = type;
@@ -212,6 +213,7 @@ public class Attachments {
     /**
      * Set the disposition of this attachment builder.
      * @param disposition the disposition.
+     * @return self
      */
     public Builder withDisposition(String disposition) {
       this.disposition = disposition;
@@ -221,6 +223,7 @@ public class Attachments {
     /**
      * Set the content ID of this attachment builder.
      * @param contentId the content ID.
+     * @return self
      */
     public Builder withContentId(String contentId) {
       this.contentId = contentId;
@@ -229,6 +232,7 @@ public class Attachments {
 
     /**
      * Construct the attachments object.
+     * @return attachments object
      */
     public Attachments build() {
       Attachments attachments = new Attachments();

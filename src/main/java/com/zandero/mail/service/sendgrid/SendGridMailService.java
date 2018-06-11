@@ -28,7 +28,10 @@ public class SendGridMailService implements MailService {
 	private final String defaultFromName;
 
 	/**
-	 * Initialized mail service for SendGrid
+	 * Initializes SendGrid mailing service (API wrapper)
+	 * @param sendGridApiKey api key
+	 * @param defaultEmail default from email if not from email is given in message
+	 * @param defaultName default from name if no from name is given in message
 	 */
 	public SendGridMailService(String sendGridApiKey, String defaultEmail, String defaultName) {
 
@@ -58,12 +61,12 @@ public class SendGridMailService implements MailService {
 			headers.put("Authorization", "Bearer " + apiKey);
 			headers.put("Content-Type", "application/json");
 
-			String body = JsonUtils.toJson(new Mail(message));
+			String body = JsonUtils.toJson(new Mail(message)); //
 			Http.Response response = Http.post(url, body, null, headers);
 
 			if (response.not(HttpURLConnection.HTTP_OK, HttpURLConnection.HTTP_CREATED, HttpURLConnection.HTTP_ACCEPTED)) {
 				log.error("Failed to send out mail: ({}) {}", response.getCode(), response.getResponse());
-				return MailSendResult.fail();
+				return MailSendResult.fail(response.getResponse());
 			}
 
 			// get message id header ... from response

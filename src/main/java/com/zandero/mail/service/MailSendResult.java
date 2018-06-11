@@ -31,7 +31,7 @@ public class MailSendResult {
 
 	/**
 	 * Mail was send out successfully
-	 * @param message
+	 * @param message success info if any
 	 * @return mail success
 	 */
 	public static MailSendResult ok(String message) {
@@ -50,6 +50,7 @@ public class MailSendResult {
 
 	/**
 	 * Mail was not send out
+	 * @param message error message
 	 * @return mail send failure
 	 */
 	public static MailSendResult fail(String message) {

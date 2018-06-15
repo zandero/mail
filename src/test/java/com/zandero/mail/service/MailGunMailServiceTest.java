@@ -54,7 +54,7 @@ class MailGunMailServiceTest extends MailServiceTest {
 
 		MailGunMailService service = new MailGunMailService(properties.get("key"), properties.get("domain"), properties.get("from"), null);
 
-		MailMessage mailMessage = new MailMessage().to(properties.get("to"), "Sombody").subject("Test").html("Hello!")
+		MailMessage mailMessage = new MailMessage().to(properties.get("to"), "Sombody").subject("Test").html("A delayed hello!")
 		                                           .setSendAt(Instant.now().plus(5, ChronoUnit.MINUTES));
 
 

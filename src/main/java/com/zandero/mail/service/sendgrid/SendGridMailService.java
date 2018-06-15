@@ -17,6 +17,7 @@ import java.util.Map;
 
 /**
  * SendGrid mail service integration (API V3 usage with API key)
+ * with MailMessage support
  */
 public class SendGridMailService implements MailService {
 

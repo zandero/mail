@@ -557,7 +557,7 @@ public class MailMessage implements Serializable {
 	public Map<String, String> getToEmails() {
 
 		if (emails != null) {
-			return getEmails(emails.get(Message.RecipientType.TO), excludeEmails);
+			return getEmails(emails.get(Message.RecipientType.TO));
 		}
 
 		return null;
@@ -570,7 +570,7 @@ public class MailMessage implements Serializable {
 	public Map<String, String> getCcEmails() {
 
 		if (emails != null) {
-			return getEmails(emails.get(Message.RecipientType.CC), excludeEmails);
+			return getEmails(emails.get(Message.RecipientType.CC));
 		}
 
 		return null;
@@ -582,7 +582,7 @@ public class MailMessage implements Serializable {
 	public Map<String, String> getBccEmails() {
 
 		if (emails != null) {
-			return getEmails(emails.get(Message.RecipientType.BCC), excludeEmails);
+			return getEmails(emails.get(Message.RecipientType.BCC));
 		}
 
 		return null;
@@ -592,15 +592,18 @@ public class MailMessage implements Serializable {
 	 * Filters out excluded emails if any
 	 *
 	 * @param emails        to be inspeced
-	 * @param excludeEmails to be excluded
 	 * @return map without excluded emails
 	 */
-	private Map<String, String> getEmails(Map<String, String> emails, List<String> excludeEmails) {
+	private Map<String, String> getEmails(Map<String, String> emails) {
+
+		if (emails == null || emails.size() == 0) {
+			return null;
+		}
 
 		Map<String, String> out = new HashMap<>();
 
 		for (String email : emails.keySet()) {
-			if (excludeEmails.contains(email)) {
+			if (excluded(email)) {
 				continue;
 			}
 

@@ -24,11 +24,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
+ * Mail gun mail API integration with MailMessage support
  */
 public class MailGunMailService implements MailService {
 
-	public static final DateTimeFormatter SEND_AT_FORMAT = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z").withZone(ZoneOffset.UTC); // RFC-2822
+	// RFC-2822 date format as per MailGun specs: https://documentation.mailgun.com/en/latest/api-intro.html#date-format
+	public static final DateTimeFormatter SEND_AT_FORMAT = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z").withZone(ZoneOffset.UTC);
 
 	private static final org.slf4j.Logger log = LoggerFactory.getLogger(MailGunMailService.class);
 
@@ -108,6 +109,8 @@ public class MailGunMailService implements MailService {
 
 			if (message.getSendAt() != null &&
 			    message.getSendAt().isBefore(Instant.now().plus(72, ChronoUnit.HOURS))) { // send in the future
+
+				//TODO: update to RFC_2822_DATE_TIME_FORMAT when new release of zandero.utils lib
 				formParams.put("o:deliverytime", InstantTimeUtils.format(message.getSendAt(), SEND_AT_FORMAT));  // "Fri, 25 May 2020 23:10:10 -0000"
 			}
 

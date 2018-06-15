@@ -15,6 +15,8 @@ import com.zandero.mail.MailMessage;
 import com.zandero.utils.StringUtils;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,6 +68,11 @@ public class Mail {
 		}
 
 		personalization.add(sendTo);
+
+		if (message.getSendAt() != null &&
+			message.getSendAt().isBefore(Instant.now().plus(72, ChronoUnit.HOURS))) { // send in the future
+			sendAt = message.getSendAt().getEpochSecond();
+		}
 	}
 
 	/**

@@ -6,7 +6,7 @@ Utility to build a mail MimeMessage
 <dependency>      
      <groupId>com.zandero</groupId>      
      <artifactId>mail</artifactId>      
-     <version>1.2</version>      
+     <version>1.0</version>      
 </dependency>
 ```
 
@@ -21,3 +21,13 @@ message.to("mail@email.com")
 
 MimeMessage mime = message.getMessage(session);
 ```
+
+## Included integrations 
+
+### SMTP
+
+
+### SendGrid
+
+
+### MailGun

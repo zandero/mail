@@ -16,6 +16,7 @@ import javax.mail.internet.*;
 import javax.mail.util.ByteArrayDataSource;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.time.Instant;
 import java.util.*;
 
 /**
@@ -70,12 +71,11 @@ public class MailMessage implements Serializable {
 	 */
 	private List<String> excludeEmails;
 
-
 	/**
-	 * timestamp when certain email should be send out
+	 * timestamp when message should be send out
 	 * in case mail system allows for this
 	 */
-	private Map<String, Long> emailSendAt;
+	private Instant emailSendAt;
 
 	/**
 	 * Build mail message
@@ -519,15 +519,16 @@ public class MailMessage implements Serializable {
 		return this;
 	}
 
-	public MailMessage setSendAt(String email, long timeStamp) {
+	/**
+	 * @param timeStamp when to send out ... if in the future
+	 * @return self
+	 */
+	public MailMessage setSendAt(Instant timeStamp) {
 
-		if (ValidatingUtils.isEmail(email)) {
-			if (emailSendAt == null) {
-				emailSendAt = new HashMap<>();
-			}
-
-			emailSendAt.put(email.trim().toLowerCase(), timeStamp);
-		}
+		if (timeStamp != null && Instant.now().isBefore(timeStamp))
+			emailSendAt = timeStamp;
+		else
+			emailSendAt = null;
 
 		return this;
 	}
@@ -556,7 +557,7 @@ public class MailMessage implements Serializable {
 	public Map<String, String> getToEmails() {
 
 		if (emails != null) {
-			return emails.get(Message.RecipientType.TO);
+			return getEmails(emails.get(Message.RecipientType.TO), excludeEmails);
 		}
 
 		return null;
@@ -569,7 +570,7 @@ public class MailMessage implements Serializable {
 	public Map<String, String> getCcEmails() {
 
 		if (emails != null) {
-			return emails.get(Message.RecipientType.CC);
+			return getEmails(emails.get(Message.RecipientType.CC), excludeEmails);
 		}
 
 		return null;
@@ -581,10 +582,32 @@ public class MailMessage implements Serializable {
 	public Map<String, String> getBccEmails() {
 
 		if (emails != null) {
-			return emails.get(Message.RecipientType.BCC);
+			return getEmails(emails.get(Message.RecipientType.BCC), excludeEmails);
 		}
 
 		return null;
+	}
+
+	/**
+	 * Filters out excluded emails if any
+	 *
+	 * @param emails        to be inspeced
+	 * @param excludeEmails to be excluded
+	 * @return map without excluded emails
+	 */
+	private Map<String, String> getEmails(Map<String, String> emails, List<String> excludeEmails) {
+
+		Map<String, String> out = new HashMap<>();
+
+		for (String email : emails.keySet()) {
+			if (excludeEmails.contains(email)) {
+				continue;
+			}
+
+			out.put(email, emails.get(email));
+		}
+
+		return out;
 	}
 
 	/**
@@ -667,18 +690,13 @@ public class MailMessage implements Serializable {
 	}
 
 	/**
-	 * Gets timestamp email should be send out (the future)
+	 * Gets timestamp message should be send out (the future)
 	 *
-	 * @param toEmail email address
 	 * @return time stamp or null if not set
 	 */
-	public Long getSendAt(String toEmail) {
+	public Instant getSendAt() {
 
-		if (emailSendAt == null || !ValidatingUtils.isEmail(toEmail)) {
-			return null;
-		}
-
-		return emailSendAt.get(toEmail.trim().toLowerCase());
+		return emailSendAt;
 	}
 
 	private void checkEmailAddress(String email, String type) {

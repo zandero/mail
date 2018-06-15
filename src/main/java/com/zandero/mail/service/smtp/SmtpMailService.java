@@ -40,11 +40,13 @@ public class SmtpMailService implements MailService {
 	/**
 	 * Sends message out via SMTP
 	 *
-	 * @param builder to construct mail message
+	 * @param message to construct mail message
 	 * @return result of send
 	 */
 	@Override
-	public MailSendResult send(MailMessage builder) {
+	public MailSendResult send(MailMessage message) {
+
+		Assert.notNull(message, "Missing mail message!");
 
 		Properties props = new Properties();
 		props.put("mail.transport.protocol", "smtp");
@@ -55,7 +57,7 @@ public class SmtpMailService implements MailService {
 
 		try {
 			// build mime message
-			Message msg = builder.getMessage(session);
+			Message msg = message.getMessage(session);
 
 			Enumeration enumer = msg.getAllHeaders();
 			while (enumer.hasMoreElements()) {

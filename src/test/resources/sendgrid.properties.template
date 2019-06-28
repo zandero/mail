@@ -1,0 +1,7 @@
+# for testing
+# rename to sendgrid.properties and replace with own settings
+#
+key=<sendgrid_API_key>
+from=<from_test_email_address>
+to=<to_test_email_address>
+

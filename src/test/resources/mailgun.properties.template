@@ -1,0 +1,8 @@
+# for testing
+# rename to mailgun.properties and replace with own settings
+#
+domain=<your_domain>
+key=<mailgun_API_key>
+from=<from_test_email_address>
+to=<to_test_email_address>
+

@@ -6,7 +6,7 @@
 
     <artifactId>mail</artifactId>
     <groupId>com.zandero</groupId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
 
     <name>Zandero</name>
@@ -52,7 +52,7 @@
 
         <version.zandero.http>[1.2.3,)</version.zandero.http>
 
-        <version.slf4j-api>1.8.0-beta2</version.slf4j-api>
+        <version.slf4j-api>2.0.0-alpha5</version.slf4j-api>
 
         <version.java.mail>[1.5.0-b01,)</version.java.mail>
         <version.java.mail.api>[1.5.5,)</version.java.mail.api>
@@ -70,7 +70,6 @@
             <artifactId>utils</artifactId>
             <version>${version.zandero.utils}</version>
         </dependency>
-
 
         <dependency>
             <groupId>com.zandero</groupId>
@@ -95,6 +94,19 @@
             <artifactId>javax.mail-api</artifactId>
             <version>${version.java.mail.api}</version>
         </dependency>
+
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+
 
         <!-- LOGGER -->
         <dependency>

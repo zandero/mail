@@ -6,8 +6,7 @@ import com.zandero.utils.extra.ValidatingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
+import javax.activation.*;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;

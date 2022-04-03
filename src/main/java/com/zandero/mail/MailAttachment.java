@@ -1,23 +1,51 @@
 package com.zandero.mail;
 
+/**
+ * Mail attachemnt to be added to email message
+ */
 public class MailAttachment {
 
-	public String type;
-	public byte[] content;
-	public String fileName;
+    /**
+     * Attachment type
+     */
+    public String type;
 
-	private MailAttachment() {
-	}
+    /**
+     * Attachment content
+     */
+    public byte[] content;
 
-	public MailAttachment(String type, byte[] content, String fileName) {
-		this.type = type;
-		this.content = content;
-		this.fileName = fileName;
-	}
+    /**
+     * Attachment file name
+     */
+    public String fileName;
 
-	public MailAttachment(String type, String content, String fileName) {
-		this.type = type;
-		this.content = content.getBytes();
-		this.fileName = fileName;
-	}
+    private MailAttachment() {
+    }
+
+    /**
+     * Creates new mail attachment
+     *
+     * @param type     mime type of attachment
+     * @param content  to be attached
+     * @param fileName file name
+     */
+    public MailAttachment(String type, byte[] content, String fileName) {
+        this.type = type;
+        this.content = content;
+        this.fileName = fileName;
+    }
+
+    /**
+     * Creates new mail attachment
+     *
+     * @param type     mime type of attachment
+     * @param content  to be attached
+     * @param fileName file name
+     */
+    public MailAttachment(String type, String content, String fileName) {
+        this.type = type;
+        this.content = content.getBytes();
+        this.fileName = fileName;
+    }
 }

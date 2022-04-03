@@ -5,6 +5,14 @@ package com.zandero.mail.service;
  */
 public class MailSendResult {
 
+	/**
+	 * Hidden
+	 */
+	private MailSendResult() {
+		status = 0;
+		message = "";
+	}
+
 	private final int status;
 
 	private final String message;
@@ -79,6 +87,8 @@ public class MailSendResult {
 	}
 
 	/**
+	 * Success flag
+	 *
 	 * @return true if mail was send out successfully, false otherwise
 	 */
 	public boolean isSuccessful() {

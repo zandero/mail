@@ -16,29 +16,53 @@ public class Content {
   @JsonProperty("type") private String type;
   @JsonProperty("value") private String  value;
 
-  public Content() {
-    return;
-  }
+  /**
+   * Content (empty)
+   */
+  public Content() {  }
 
+  /**
+   * Content
+   *
+   * @param type of content
+   * @param value content
+   */
   public Content(String type, String value) {
-    this.setType(type);
-    this.setValue(value);
+    setType(type);
+    setValue(value);
   }
 
+  /**
+   * Conent type
+   * @return type of content
+   */
   @JsonProperty("type")
   public String getType() {
     return type;
   }
 
+  /**
+   * Sets content type
+   * @param type of content
+   */
   public void setType(String type) {
     this.type = type;
   }
 
+  /**
+   * Content value
+   * @return value as string
+   */
   @JsonProperty("value")
   public String getValue() {
     return value;
   }
 
+  /**
+   * Setns content and checks if valid
+   * @param value to be set
+   * @throws IllegalArgumentException if content is invalid
+   */
   public void setValue(String value) {
     ContentVerifier.verifyContent(value);
     this.value = value;
@@ -76,6 +100,9 @@ public class Content {
   }
 }
 
+/**
+ * Content verifier utility
+ */
 class ContentVerifier {
   private static final List<Pattern> FORBIDDEN_PATTERNS = Collections.singletonList(
           Pattern.compile(".*SG\\.[a-zA-Z0-9(-|_)]*\\.[a-zA-Z0-9(-|_)]*.*")

@@ -28,16 +28,18 @@ import java.util.Map;
  */
 public class MailGunMailService implements MailService {
 
-	// RFC-2822 date format as per MailGun specs: https://documentation.mailgun.com/en/latest/api-intro.html#date-format
-	public static final DateTimeFormatter SEND_AT_FORMAT = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z").withZone(ZoneOffset.UTC);
+	/**
+	 * RFC-2822 date format as per MailGun specs: https://documentation.mailgun.com/en/latest/api-intro.html#date-format
+	 */
+	public static final DateTimeFormatter SEND_AT_FORMAT = InstantTimeUtils.RFC_2822_DATE_TIME_FORMAT;
 
 	private static final org.slf4j.Logger log = LoggerFactory.getLogger(MailGunMailService.class);
 
-	private String domain;
-	private String apiKey;
+	private final String domain;
+	private final String apiKey;
 
-	private String defaultFrom;
-	private String defaultFromName;
+	private final String defaultFrom;
+	private final String defaultFromName;
 
 	/**
 	 * Initializes MailGun mailing service (API wrapper)
@@ -65,6 +67,11 @@ public class MailGunMailService implements MailService {
 		log.info("Initializing MailGun with key: " + StringUtils.trimTextDown(apiKey, 9, "***"));
 	}
 
+	/**
+	 * Sends mail via MailGun service
+	 * @param message to be send
+	 * @return mail gun send result
+	 */
 	@Override
 	public MailSendResult send(MailMessage message) {
 

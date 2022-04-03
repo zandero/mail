@@ -8,8 +8,17 @@ import com.zandero.utils.extra.ValidatingUtils;
 
 import java.util.List;
 
+/**
+ * Mail service to be implemented
+ */
 public interface MailService {
 
+	/**
+	 * Send message out
+	 *
+	 * @param builder to build mail message
+	 * @return mail send out result
+	 */
 	MailSendResult send(MailMessage builder);
 
 	/**

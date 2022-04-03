@@ -3,10 +3,18 @@ Utility to build a mail MimeMessage
 
 ## Setup
 ```xml
+JAVA 8
 <dependency>      
      <groupId>com.zandero</groupId>      
      <artifactId>mail</artifactId>      
      <version>1.0.2</version>      
+</dependency>
+        
+JAVA 8
+<dependency>
+    <groupId>com.zandero</groupId>
+    <artifactId>mail</artifactId>
+    <version>1.1</version>
 </dependency>
 ```
 

@@ -15,6 +15,11 @@ import java.io.InputStream;
  */
 @JsonInclude(Include.NON_DEFAULT)
 public class Attachments {
+
+  /**
+   * Mail attachment
+   */
+  public Attachments() {}
   
   /** The attachment content. */
   @JsonProperty("content") private String content;

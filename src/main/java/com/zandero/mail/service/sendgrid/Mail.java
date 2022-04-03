@@ -29,6 +29,10 @@ import java.util.Map;
 @JsonInclude(Include.NON_DEFAULT)
 public class Mail {
 
+	/**
+	 * Send grid mail message
+	 * @param message to be send
+	 */
 	public Mail(MailMessage message) {
 
 		from = new Email(message.getFromEmail(), message.getFromName());
@@ -205,9 +209,7 @@ public class Mail {
 	/**
 	 * Construct a new Mail object.
 	 */
-	public Mail() {
-		return;
-	}
+	public Mail() {	}
 
 	/**
 	 * Construct a new Mail object.

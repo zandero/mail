@@ -61,7 +61,7 @@
         <version.mockito.all>[1.10.19,)</version.mockito.all>
 
         <version.slf4j-api>1.7.36</version.slf4j-api>
-        <version.logback>1.1.7</version.logback>
+        <version.logback>1.2.0</version.logback>
 
     </properties>
 

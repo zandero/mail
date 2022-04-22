@@ -14,7 +14,7 @@ JAVA 8
 <dependency>
     <groupId>com.zandero</groupId>
     <artifactId>mail</artifactId>
-    <version>1.1</version>
+    <version>1.1.1</version>
 </dependency>
 ```
 

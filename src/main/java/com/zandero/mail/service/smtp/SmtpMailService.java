@@ -32,7 +32,7 @@ public class SmtpMailService implements MailService {
     public SmtpMailService(String url, int port, String username, String password) {
 
         Assert.notNullOrEmptyTrimmed(url, "Missing SMPT server url!");
-        Assert.isTrue(port < 0 || port > 9999, "Invalid SMTP port given: " + port);
+        Assert.isTrue(port > 0 && port < 10000, "Invalid SMTP port given: " + port);
 
         smtpHost = url;
         smtpPort = port;
